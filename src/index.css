@@ -95,7 +95,14 @@
     @apply bg-background text-foreground;
     font-family: var(--font-inter);
     overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
   }
 }
 
@@ -114,7 +121,10 @@
 .no-select,
 button,
 a,
-.cursor-pointer {
+.cursor-pointer,
+[role="button"],
+svg,
+img {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

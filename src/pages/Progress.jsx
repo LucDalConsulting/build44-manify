@@ -92,6 +92,7 @@ export default function Progress() {
           </div>
         </div>
       </div>
+      <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );
 }
