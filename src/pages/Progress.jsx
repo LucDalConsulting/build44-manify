@@ -1,23 +1,27 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Flame, Trophy, BarChart3 } from "lucide-react";
+import React, { useState } from "react";
+import { Flame, Trophy, BarChart3, Settings } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
-import { getLessonsForCategory } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";
 import RankBadge from "../components/manify/RankBadge";
 import MasteryRing from "../components/manify/MasteryRing";
+import SettingsModal from "../components/modals/SettingsModal";
 
 export default function Progress() {
+  const [showSettings, setShowSettings] = useState(false);
   const p = useProgress();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
-        <Link to="/Home" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back
-        </Link>
-
-        <h1 className="text-2xl font-bold text-foreground">Progress</h1>
+    <div className="h-full overflow-y-auto">
+      <div className="max-w-lg mx-auto px-4 py-6 pb-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-foreground">Progress</h1>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="p-2 rounded-lg hover:bg-card transition-colors no-select"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" />
+          </button>
+        </div>
 
         {/* Rank */}
         <RankBadge rank={p.currentRank} totalXP={p.totalXP} />
