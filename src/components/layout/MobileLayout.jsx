@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Home, BookOpen, TrendingUp } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { CATEGORIES } from "../data/categories";
 
 export default function MobileLayout() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export default function MobileLayout() {
   
   // Independent navigation stacks for each tab
   const homeStack = useRef(["/Home"]);
-  const trainingStack = useRef(["/Category"]);
+  const trainingStack = useRef([`/Category?id=${CATEGORIES[0].id}`]);
   const progressStack = useRef(["/Progress"]);
 
   const navItems = [
@@ -44,15 +45,18 @@ export default function MobileLayout() {
   }, [location.pathname]);
 
   const handleTabClick = (item) => {
-    const isActive = location.pathname === item.path;
+    const isActive = location.pathname === item.path || 
+      (item.path === "/Category" && location.pathname === "/Category");
     
     if (isActive) {
       // Reset to root of this tab's stack
-      item.stack.current = [item.path];
-      navigate(item.path, { replace: true });
+      const rootPath = item.path === "/Category" ? `/Category?id=${CATEGORIES[0].id}` : item.path;
+      item.stack.current = [rootPath];
+      navigate(rootPath, { replace: true });
     } else {
       // Switch to this tab's current page (top of stack)
-      const targetPath = item.stack.current[item.stack.current.length - 1] || item.path;
+      const targetPath = item.stack.current[item.stack.current.length - 1] || 
+        (item.path === "/Category" ? `/Category?id=${CATEGORIES[0].id}` : item.path);
       navigate(targetPath);
     }
   };
