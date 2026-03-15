@@ -37,7 +37,7 @@ export default function PullToRefresh({ children, onRefresh }) {
   return (
     <div ref={containerRef} className="h-full overflow-y-auto relative">
       <motion.div
-        className="absolute top-0 left-0 right-0 flex items-center justify-center z-10"
+        className="absolute top-0 left-0 right-0 flex items-center justify-center z-10 pointer-events-none"
         style={{ y: -40, opacity }}
       >
         <motion.div
@@ -57,9 +57,10 @@ export default function PullToRefresh({ children, onRefresh }) {
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
         style={{ y }}
-        className="min-h-full"
       >
-        {children}
+        <div className="min-h-full">
+          {children}
+        </div>
       </motion.div>
     </div>
   );
