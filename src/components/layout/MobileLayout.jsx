@@ -32,17 +32,17 @@ export default function MobileLayout() {
 
   // Update stack when navigating
   useEffect(() => {
-    const path = location.pathname;
+    const fullPath = location.pathname + location.search;
     const tab = getCurrentTab();
     
-    if (tab === "home" && !homeStack.current.includes(path)) {
-      homeStack.current.push(path);
-    } else if (tab === "training" && !trainingStack.current.includes(path)) {
-      trainingStack.current.push(path);
-    } else if (tab === "progress" && !progressStack.current.includes(path)) {
-      progressStack.current.push(path);
+    if (tab === "home" && !homeStack.current.includes(fullPath)) {
+      homeStack.current.push(fullPath);
+    } else if (tab === "training" && !trainingStack.current.includes(fullPath)) {
+      trainingStack.current.push(fullPath);
+    } else if (tab === "progress" && !progressStack.current.includes(fullPath)) {
+      progressStack.current.push(fullPath);
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   const handleTabClick = (item) => {
     const isActive = location.pathname === item.path || 
