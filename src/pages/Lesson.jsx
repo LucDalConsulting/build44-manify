@@ -74,7 +74,7 @@ export default function Lesson() {
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{lesson.estimatedMinutes} min</span>
             <DifficultyDots difficulty={lesson.difficulty} />
-            {category && <span className="flex items-center gap-1"><CategoryIcon name={category.icon} className="w-3 h-3" />{category.displayName}</span>}
+            {category && <span className="flex items-center gap-1"><CategoryIcon name={category.icon} className="w-3 h-3" style={{ color: category.accentColor }} />{category.displayName}</span>}
           </div>
           {progress.bestScore > 0 && (
             <div className="flex items-center gap-2 mt-3 text-xs">
