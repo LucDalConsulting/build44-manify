@@ -7,6 +7,7 @@ import useProgress from "../components/hooks/useProgress";
 import CategoryIcon from "../components/manify/CategoryIcon";
 import MasteryRing from "../components/manify/MasteryRing";
 import LessonRow from "../components/manify/LessonRow";
+import PullToRefresh from "../components/mobile/PullToRefresh";
 
 export default function Category() {
   const navigate = useNavigate();
@@ -16,6 +17,15 @@ export default function Category() {
   const lessons = getLessonsForCategory(categoryId);
   const tiers = [...new Set(lessons.map((l) => l.tier))].sort();
   const p = useProgress();
+
+  const handleRefresh = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        window.location.reload();
+        resolve();
+      }, 500);
+    });
+  };
 
   if (!category) return <div className="min-h-screen bg-background flex items-center justify-center text-foreground">Category not found</div>;
 
@@ -37,7 +47,7 @@ export default function Category() {
   };
 
   return (
-    <div className="h-full overflow-y-auto">
+    <PullToRefresh onRefresh={handleRefresh}>
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
         <button
           onClick={() => navigate(-1, { state: { direction: -1 } })}
@@ -107,7 +117,7 @@ export default function Category() {
           );
         })}
       </div>
-    </div>
+    </PullToRefresh>
   );
 }
 

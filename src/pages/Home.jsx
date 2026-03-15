@@ -6,10 +6,20 @@ import { getLessonsForCategory, getAllLessons, getLessonById } from "../componen
 import useProgress from "../components/hooks/useProgress";
 import RankBadge from "../components/manify/RankBadge";
 import CategoryTile from "../components/manify/CategoryTile";
+import PullToRefresh from "../components/mobile/PullToRefresh";
 
 export default function Home() {
   const navigate = useNavigate();
   const p = useProgress();
+
+  const handleRefresh = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        window.location.reload();
+        resolve();
+      }, 500);
+    });
+  };
 
   const findCurrentLesson = () => {
     if (p.data.currentLessonId) {
@@ -27,7 +37,7 @@ export default function Home() {
   const current = findCurrentLesson();
 
   return (
-    <div className="h-full overflow-y-auto">
+    <PullToRefresh onRefresh={handleRefresh}>
       <div className="max-w-lg mx-auto px-4 pb-6 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -104,6 +114,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

@@ -1,19 +1,63 @@
-import React, { useState } from "react";
-import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Home, BookOpen, TrendingUp } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function MobileLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Independent navigation stacks for each tab
+  const homeStack = useRef(["/Home"]);
+  const trainingStack = useRef(["/Category"]);
+  const progressStack = useRef(["/Progress"]);
 
   const navItems = [
-    { path: "/Home", icon: Home, label: "Home" },
-    { path: "/Category", icon: BookOpen, label: "Training" },
-    { path: "/Progress", icon: TrendingUp, label: "Progress" },
+    { path: "/Home", icon: Home, label: "Home", stack: homeStack },
+    { path: "/Category", icon: BookOpen, label: "Training", stack: trainingStack },
+    { path: "/Progress", icon: TrendingUp, label: "Progress", stack: progressStack },
   ];
 
-  const isMainPage = ["/Home", "/Flashcards", "/Progress"].includes(location.pathname);
+  // Determine current tab
+  const getCurrentTab = () => {
+    const path = location.pathname;
+    if (path === "/Home") return "home";
+    if (["/Category", "/Lesson", "/Quiz"].includes(path)) return "training";
+    if (path === "/Progress" || path === "/Flashcards") return "progress";
+    return null;
+  };
+
+  const currentTab = getCurrentTab();
+
+  // Update stack when navigating
+  useEffect(() => {
+    const path = location.pathname;
+    const tab = getCurrentTab();
+    
+    if (tab === "home" && !homeStack.current.includes(path)) {
+      homeStack.current.push(path);
+    } else if (tab === "training" && !trainingStack.current.includes(path)) {
+      trainingStack.current.push(path);
+    } else if (tab === "progress" && !progressStack.current.includes(path)) {
+      progressStack.current.push(path);
+    }
+  }, [location.pathname]);
+
+  const handleTabClick = (item) => {
+    const isActive = location.pathname === item.path;
+    
+    if (isActive) {
+      // Reset to root of this tab's stack
+      item.stack.current = [item.path];
+      navigate(item.path, { replace: true });
+    } else {
+      // Switch to this tab's current page (top of stack)
+      const targetPath = item.stack.current[item.stack.current.length - 1] || item.path;
+      navigate(targetPath);
+    }
+  };
+
+  const isMainPage = ["/Home", "/Category", "/Progress"].includes(location.pathname);
   const direction = location.state?.direction || 0;
 
   const pageVariants = {
@@ -35,7 +79,6 @@ export default function MobileLayout() {
 
   return (
     <div className="mobile-safe-area h-screen flex flex-col overflow-hidden">
-
       {/* Page Content */}
       <main className="flex-1 overflow-hidden relative">
         <AnimatePresence mode="wait" custom={direction}>
@@ -46,7 +89,7 @@ export default function MobileLayout() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="h-full overflow-y-auto"
+            className="h-full"
           >
             <Outlet />
           </motion.div>
@@ -63,7 +106,7 @@ export default function MobileLayout() {
               return (
                 <button
                   key={item.path}
-                  onClick={() => navigate(item.path)}
+                  onClick={() => handleTabClick(item)}
                   className="flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-colors no-select"
                 >
                   <Icon className={`w-6 h-6 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
