@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Flame, Star, BarChart3, Layers } from "lucide-react";
+import { Flame, Star, BarChart3 } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
 import { getLessonsForCategory, getAllLessons, getLessonById } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";
@@ -74,19 +74,7 @@ export default function Home() {
           </button>
         )}
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3.5 rounded-xl bg-card border border-white/[0.04]">
-            <Star className="w-5 h-5 text-warning mb-2" />
-            <p className="text-sm font-semibold text-foreground">Review</p>
-            <p className="text-xs text-muted-foreground">Weak spots</p>
-          </div>
-          <Link to="/Progress" className="p-3.5 rounded-xl bg-card border border-white/[0.04]">
-            <Layers className="w-5 h-5 text-blue-400 mb-2" />
-            <p className="text-sm font-semibold text-foreground">Progress</p>
-            <p className="text-xs text-muted-foreground">View stats</p>
-          </Link>
-        </div>
+
 
         {/* Training Tracks */}
         <div>
