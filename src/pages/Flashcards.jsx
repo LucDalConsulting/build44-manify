@@ -1,118 +1,133 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRightCircle, CheckCircle2 } from "lucide-react";
-import { getLessonById } from "../components/data/lessons";
+import { ArrowLeft, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getAllLessons } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";
 
-export default function Flashcards() {
-  const params = new URLSearchParams(window.location.search);
-  const lessonId = params.get("id");
-  const lesson = getLessonById(lessonId);
+export default function FlashcardsPage() {
   const p = useProgress();
+  const allLessons = getAllLessons();
+  const lessonsWithFlashcards = allLessons.filter((l) => l.flashcards && l.flashcards.length > 0);
+
+  // Get due flashcards
+  const dueFlashcards = lessonsWithFlashcards.flatMap((lesson) => {
+    return lesson.flashcards.filter((card) => {
+      const schedule = p.data.flashcardSchedules[card.id];
+      if (!schedule || !schedule.nextReviewDate) return true;
+      return new Date(schedule.nextReviewDate) <= new Date();
+    }).map((card) => ({ ...card, lessonTitle: lesson.title }));
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isDone, setIsDone] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
-  if (!lesson) return <div className="min-h-screen bg-background flex items-center justify-center text-foreground">Lesson not found</div>;
+  if (lessonsWithFlashcards.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center px-4">
+        <div className="text-center space-y-3">
+          <p className="text-sm text-muted-foreground">No flashcards available yet</p>
+          <p className="text-xs text-muted-foreground">Complete lessons to unlock flashcards</p>
+        </div>
+      </div>
+    );
+  }
 
-  const cards = lesson.flashcards;
-  const card = cards[currentIndex];
+  if (dueFlashcards.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center px-4">
+        <div className="text-center space-y-3">
+          <p className="text-sm text-foreground font-semibold">All caught up!</p>
+          <p className="text-xs text-muted-foreground">No flashcards due for review</p>
+        </div>
+      </div>
+    );
+  }
 
-  const nextCard = () => {
-    setIsFlipped(false);
-    setTimeout(() => {
-      if (currentIndex < cards.length - 1) {
-        setCurrentIndex((i) => i + 1);
-      } else {
-        p.markFlashcards(lesson.id, cards.map((c) => c.id));
-        setIsDone(true);
-      }
-    }, 150);
+  const currentCard = dueFlashcards[currentIndex];
+
+  const handleNext = () => {
+    if (currentIndex + 1 < dueFlashcards.length) {
+      setCurrentIndex(currentIndex + 1);
+      setIsFlipped(false);
+    } else {
+      p.markFlashcards(null, dueFlashcards.map((c) => c.id));
+      setCompleted(true);
+    }
   };
 
-  if (isDone) {
+  const handleRestart = () => {
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setCompleted(false);
+  };
+
+  if (completed) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-lg mx-auto px-4 py-16 flex flex-col items-center gap-6">
-          <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center">
-            <CheckCircle2 className="w-9 h-9 text-success" />
+      <div className="h-full flex items-center justify-center px-4">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mx-auto">
+            <RotateCcw className="w-8 h-8 text-success" />
           </div>
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground">Flashcards Complete</h2>
-            <p className="text-muted-foreground mt-1">{cards.length} cards reviewed</p>
+          <div>
+            <h2 className="text-lg font-bold text-foreground">Session Complete!</h2>
+            <p className="text-sm text-muted-foreground mt-1">Reviewed {dueFlashcards.length} cards</p>
           </div>
-          <p className="text-xl font-bold text-primary">+10 XP</p>
-          <Link to={`/Lesson?id=${lessonId}`}
-            className="w-full max-w-xs p-4 rounded-xl bg-gradient-to-r from-gold-light via-primary to-gold-dark text-background font-semibold text-center">
-            Done
-          </Link>
+          <Button onClick={handleRestart} className="gap-2">
+            <RotateCcw className="w-4 h-4" />
+            Review Again
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-8">
-        <div className="flex items-center justify-between">
-          <Link to={`/Lesson?id=${lessonId}`} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-          </Link>
-          <span className="text-sm font-medium text-foreground">Flashcards</span>
-          <span className="text-xs font-semibold text-muted-foreground">{currentIndex + 1}/{cards.length}</span>
-        </div>
-
-        {/* Progress dots */}
-        <div className="flex justify-center gap-1.5">
-          {cards.map((_, i) => (
-            <div key={i} className={`w-2 h-2 rounded-full transition-all ${i <= currentIndex ? "bg-primary" : "bg-white/[0.1]"}`} />
+    <div className="h-full flex flex-col px-4 py-6">
+      <div className="mb-4">
+        <p className="text-xs text-muted-foreground text-center">
+          Card {currentIndex + 1} of {dueFlashcards.length}
+        </p>
+        <div className="flex gap-1 mt-2">
+          {dueFlashcards.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 flex-1 rounded-full transition-colors ${
+                i <= currentIndex ? "bg-primary" : "bg-white/[0.08]"
+              }`}
+            />
           ))}
         </div>
+      </div>
 
-        {/* Card */}
+      <div className="flex-1 flex items-center justify-center">
         <div
           onClick={() => setIsFlipped(!isFlipped)}
-          className="cursor-pointer perspective-1000"
+          className="w-full max-w-sm aspect-[3/4] cursor-pointer perspective-1000 no-select"
         >
           <div
-            className={`relative w-full min-h-[320px] transition-transform duration-500 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
-            style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", transition: "transform 0.5s" }}
+            className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${
+              isFlipped ? "rotate-y-180" : ""
+            }`}
           >
-            {/* Front */}
-            <div
-              className="absolute inset-0 rounded-2xl bg-card border border-white/[0.08] flex flex-col items-center justify-center p-8"
-              style={{ backfaceVisibility: "hidden" }}
-            >
-              <span className="text-[10px] font-bold tracking-widest text-primary mb-4">TERM</span>
-              <p className="text-xl font-bold text-foreground text-center">{card.front}</p>
+            <div className="absolute inset-0 backface-hidden rounded-2xl bg-card border border-white/[0.06] p-8 flex flex-col items-center justify-center">
+              <p className="text-[10px] font-bold tracking-wider text-primary mb-4">TERM</p>
+              <p className="text-lg font-semibold text-foreground text-center">{currentCard.front}</p>
+              <p className="text-xs text-muted-foreground mt-6 text-center">{currentCard.lessonTitle}</p>
             </div>
-            {/* Back */}
-            <div
-              className="absolute inset-0 rounded-2xl bg-card border border-primary/30 flex flex-col items-center justify-center p-8"
-              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-            >
-              <span className="text-[10px] font-bold tracking-widest text-primary mb-4">DEFINITION</span>
-              <p className="text-base text-foreground text-center leading-relaxed">{card.back}</p>
-              {card.tags?.length > 0 && (
-                <div className="flex gap-2 mt-4">
-                  {card.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] text-muted-foreground px-2 py-0.5 rounded-full bg-white/[0.06]">{tag}</span>
-                  ))}
-                </div>
-              )}
+            <div className="absolute inset-0 backface-hidden rounded-2xl bg-primary/10 border border-primary/20 p-8 flex flex-col items-center justify-center rotate-y-180">
+              <p className="text-[10px] font-bold tracking-wider text-primary mb-4">DEFINITION</p>
+              <p className="text-sm text-foreground text-center leading-relaxed">{currentCard.back}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Next button */}
-        <div className="flex flex-col items-center gap-3">
-          <button onClick={nextCard} className="flex flex-col items-center gap-1.5">
-            <ArrowRightCircle className="w-12 h-12 text-primary" />
-            <span className="text-xs text-muted-foreground">Next</span>
-          </button>
-          <p className="text-xs text-muted-foreground/60">Tap card to flip</p>
-        </div>
+      <div className="pt-4">
+        <Button onClick={handleNext} className="w-full" size="lg">
+          {currentIndex + 1 < dueFlashcards.length ? "Next Card" : "Finish"}
+        </Button>
       </div>
     </div>
   );

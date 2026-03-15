@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, XCircle, Info, ChevronRight } from "lucide-react";
 import { getLessonById } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";

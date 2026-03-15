@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Lock, CheckCircle2, Circle, Clock } from "lucide-react";
 
 export default function LessonRow({ lesson, progress, isAvailable }) {
+  const navigate = useNavigate();
+
   const content = (
-    <div className={`flex items-center gap-3 p-3.5 rounded-xl transition-all ${isAvailable ? "bg-card hover:bg-panel-light border border-white/[0.06]" : "bg-card/50 opacity-50 border border-white/[0.03]"}`}>
+    <div className={`flex items-center gap-3 p-3.5 rounded-xl transition-all no-select ${isAvailable ? "bg-card hover:bg-panel-light border border-white/[0.06]" : "bg-card/50 opacity-50 border border-white/[0.03]"}`}>
       <div className="flex-shrink-0">
         {progress.isCompleted ? (
           <CheckCircle2 className="w-5 h-5 text-success" />
@@ -33,5 +35,9 @@ export default function LessonRow({ lesson, progress, isAvailable }) {
   );
 
   if (!isAvailable) return content;
-  return <Link to={`/Lesson?id=${lesson.id}`}>{content}</Link>;
+  return (
+    <button onClick={() => navigate(`/Lesson?id=${lesson.id}`, { state: { direction: 1 } })} className="w-full text-left">
+      {content}
+    </button>
+  );
 }

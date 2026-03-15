@@ -1,12 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CategoryIcon from "./CategoryIcon";
 
 export default function CategoryTile({ category, mastery, lessonsCount }) {
+  const navigate = useNavigate();
   const pct = Math.round(mastery * 100);
 
   return (
-    <Link to={`/Category?id=${category.id}`} className="block">
+    <button
+      onClick={() => navigate(`/Category?id=${category.id}`, { state: { direction: 1 } })}
+      className="w-full text-left no-select"
+    >
       <div className="p-4 rounded-xl bg-card border border-white/[0.06] hover:border-white/[0.12] transition-all">
         <div className="flex justify-between items-start mb-3">
           <CategoryIcon name={category.icon} className="w-7 h-7" style={{ color: category.accentColor }} />
@@ -24,6 +28,6 @@ export default function CategoryTile({ category, mastery, lessonsCount }) {
         )}
         <p className="text-[10px] text-muted-foreground mt-2">{lessonsCount} lessons</p>
       </div>
-    </Link>
+    </button>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, LockOpen, CheckCircle2, Shield } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
 import { getLessonsForCategory } from "../components/data/lessons";
@@ -9,6 +9,7 @@ import MasteryRing from "../components/manify/MasteryRing";
 import LessonRow from "../components/manify/LessonRow";
 
 export default function Category() {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const categoryId = params.get("id");
   const category = CATEGORIES.find((c) => c.id === categoryId);
@@ -36,11 +37,14 @@ export default function Category() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full overflow-y-auto">
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
-        <Link to="/Home" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          onClick={() => navigate(-1, { state: { direction: -1 } })}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors no-select"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
-        </Link>
+        </button>
 
         {/* Header */}
         <div className="p-4 rounded-xl bg-card border transition-all" style={{ borderColor: `${category.accentColor}33` }}>
