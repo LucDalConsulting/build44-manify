@@ -57,10 +57,9 @@ export default function PullToRefresh({ children, onRefresh }) {
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
         style={{ y }}
+        className="min-h-full bg-background"
       >
-        <div className="min-h-full">
-          {children}
-        </div>
+        {children}
       </motion.div>
     </div>
   );
