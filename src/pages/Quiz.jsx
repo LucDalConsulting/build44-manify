@@ -79,8 +79,8 @@ export default function Quiz() {
             <button onClick={resetQuiz} className={`w-full p-4 rounded-xl text-center font-semibold ${passed ? "bg-card border border-primary/30 text-foreground" : "bg-gradient-to-r from-gold-light via-primary to-gold-dark text-background"}`}>
               {passed ? "Retry for Better Score" : "Retry Quiz"}
             </button>
-            <Link to={`/Lesson?id=${lessonId}`} className="block w-full p-4 rounded-xl text-center font-semibold bg-gradient-to-r from-gold-light via-primary to-gold-dark text-background">
-              Done
+            <Link to={`/Category?id=${lesson.categoryId}`} className="block w-full p-4 rounded-xl text-center font-semibold bg-gradient-to-r from-gold-light via-primary to-gold-dark text-background">
+              Back to Category
             </Link>
           </div>
         </div>

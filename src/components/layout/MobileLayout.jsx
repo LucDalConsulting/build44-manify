@@ -61,7 +61,7 @@ export default function MobileLayout() {
     }
   };
 
-  const isMainPage = ["/Home", "/Category", "/Progress"].includes(location.pathname);
+  const isMainPage = true; // Always show bottom navigation
   const direction = location.state?.direction || 0;
 
   const pageVariants = {
