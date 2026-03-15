@@ -14,7 +14,7 @@ import Quiz from './pages/Quiz';
 import Flashcards from './pages/Flashcards';
 import Progress from './pages/Progress';
 
-const AuthenticatedApp: React.FC = () => {
+const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -50,7 +50,7 @@ const AuthenticatedApp: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
