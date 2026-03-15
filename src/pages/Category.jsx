@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Lock, CheckCircle2, Shield } from "lucide-react";
+import { ArrowLeft, Lock, LockOpen, CheckCircle2, Shield } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
 import { getLessonsForCategory } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";
@@ -78,7 +78,7 @@ export default function Category() {
             <div key={tier} className="space-y-3">
               <div className="flex items-center gap-2">
                 {unlocked ? (
-                  <Lock className="w-3 h-3 text-primary" />
+                  <LockOpen className="w-3 h-3 text-primary" />
                 ) : (
                   <Lock className="w-3 h-3 text-muted-foreground" />
                 )}
