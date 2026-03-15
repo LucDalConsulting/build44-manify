@@ -5,23 +5,12 @@ import useProgress from "../components/hooks/useProgress";
 import RankBadge from "../components/manify/RankBadge";
 import MasteryRing from "../components/manify/MasteryRing";
 import SettingsModal from "../components/modals/SettingsModal";
-import PullToRefresh from "../components/mobile/PullToRefresh";
-
 export default function Progress() {
   const [showSettings, setShowSettings] = useState(false);
   const p = useProgress();
 
-  const handleRefresh = async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        window.location.reload();
-        resolve();
-      }, 500);
-    });
-  };
-
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
+    <div className="h-full overflow-y-auto">
       <div className="max-w-lg mx-auto px-4 py-6 pb-6 space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-foreground">Progress</h1>
@@ -107,6 +96,6 @@ export default function Progress() {
         </div>
       </div>
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
-    </PullToRefresh>
+    </div>
   );
 }
