@@ -45,7 +45,6 @@ export default function Home() {
             { value: p.currentStreak, label: "Streak", icon: Flame, color: "text-warning" },
             { value: p.totalXP, label: "XP", icon: Star, color: "text-primary" },
             { value: p.disciplineIndex, label: "Index", icon: BarChart3, color: "text-success" },
-            { value: p.flashcardsDueCount, label: "Due", icon: Layers, color: "text-blue-400" },
           ].map((s) => (
             <div key={s.label} className="flex-1 flex flex-col items-center gap-1.5">
               <s.icon className={`w-4 h-4 ${s.color}`} />
