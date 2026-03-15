@@ -5,8 +5,8 @@ const iconMap = {
   Building2, Crosshair, Home, Car, Flame, Waves,
 };
 
-export default function CategoryIcon({ name, className = "" }) {
+export default function CategoryIcon({ name, className = "", style = {} }) {
   const Icon = iconMap[name];
   if (!Icon) return null;
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 }
