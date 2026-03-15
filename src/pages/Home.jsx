@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Flame, Star, BarChart3 } from "lucide-react";
+import { Flame, Star, BarChart3, Layers } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
 import { getLessonsForCategory, getAllLessons, getLessonById } from "../components/data/lessons";
 import useProgress from "../components/hooks/useProgress";
