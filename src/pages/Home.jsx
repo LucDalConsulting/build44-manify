@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Flame, Star, BarChart3, Layers } from "lucide-react";
 import { CATEGORIES } from "../components/data/categories";
 import { getLessonsForCategory, getAllLessons, getLessonById } from "../components/data/lessons";
@@ -8,6 +8,7 @@ import RankBadge from "../components/manify/RankBadge";
 import CategoryTile from "../components/manify/CategoryTile";
 
 export default function Home() {
+  const navigate = useNavigate();
   const p = useProgress();
 
   const findCurrentLesson = () => {
@@ -57,7 +58,10 @@ export default function Home() {
 
         {/* Continue Training */}
         {current && (
-          <Link to={`/Lesson?id=${current.id}`} className="block">
+          <button
+            onClick={() => navigate(`/Lesson?id=${current.id}`, { state: { direction: 1 } })}
+            className="w-full text-left no-select"
+          >
             <div className="p-4 rounded-xl bg-gradient-to-br from-panel-light to-card border border-primary/20 hover:border-primary/40 transition-all">
               <p className="text-[10px] font-bold tracking-wider text-primary mb-2">CONTINUE TRAINING</p>
               <h3 className="font-semibold text-foreground">{current.title}</h3>
@@ -68,7 +72,7 @@ export default function Home() {
                 <span>{CATEGORIES.find((c) => c.id === current.categoryId)?.displayName}</span>
               </div>
             </div>
-          </Link>
+          </button>
         )}
 
         {/* Quick Actions */}

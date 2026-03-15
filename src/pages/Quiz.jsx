@@ -6,6 +6,7 @@ import useProgress from "../components/hooks/useProgress";
 import MasteryRing from "../components/manify/MasteryRing";
 
 export default function Quiz() {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const lessonId = params.get("id");
   const lesson = getLessonById(lessonId);
@@ -56,7 +57,7 @@ export default function Quiz() {
     const xp = passed ? 30 + (correctCount === questions.length ? 10 : 0) : 0;
 
     return (
-      <div className="min-h-screen bg-background">
+      <div className="h-full overflow-y-auto">
         <div className="max-w-lg mx-auto px-4 py-12 flex flex-col items-center gap-6">
           <div className={`w-16 h-16 rounded-full flex items-center justify-center ${passed ? "bg-success/20" : "bg-warning/20"}`}>
             {passed ? <CheckCircle2 className="w-9 h-9 text-success" /> : <Info className="w-9 h-9 text-warning" />}
@@ -88,12 +89,15 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full overflow-y-auto">
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
         <div className="flex items-center justify-between">
-          <Link to={`/Lesson?id=${lessonId}`} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <button
+            onClick={() => navigate(-1, { state: { direction: -1 } })}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors no-select"
+          >
             <ArrowLeft className="w-4 h-4" />
-          </Link>
+          </button>
           <span className="text-sm font-medium text-foreground">Lesson Quiz</span>
           <div className="w-4" />
         </div>

@@ -8,6 +8,7 @@ import ContentBlockCard from "../components/manify/ContentBlockCard";
 import CategoryIcon from "../components/manify/CategoryIcon";
 
 export default function Lesson() {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const lessonId = params.get("id");
   const lesson = getLessonById(lessonId);
@@ -53,12 +54,15 @@ export default function Lesson() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full overflow-y-auto">
       <div className="max-w-lg mx-auto px-4 py-6 space-y-4">
         <div className="flex items-center justify-between">
-          <Link to={`/Category?id=${lesson.categoryId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <button
+            onClick={() => navigate(-1, { state: { direction: -1 } })}
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors no-select"
+          >
             <ArrowLeft className="w-4 h-4" /> Back
-          </Link>
+          </button>
           <button onClick={() => p.toggleBookmark(lesson.id)} className="p-2">
             <Bookmark className={`w-5 h-5 ${p.isBookmarked(lesson.id) ? "fill-primary text-primary" : "text-primary"}`} />
           </button>
